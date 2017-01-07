@@ -1,0 +1,16 @@
+{
+    "name": "cantiencollinet/laravel-sms",
+    "description": "Laravel interface to SMS gateways",
+    "type": "library",
+    "require": {
+        "ovh/php-ovh-sms": "1.0.*",
+        "twilio/sdk": "5.4.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gordesch",
+            "email": "cantien@collinet.tech"
+        }
+    ]
+}
