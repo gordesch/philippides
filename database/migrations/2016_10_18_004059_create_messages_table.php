@@ -15,22 +15,18 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('broadcast_message_id')->unsigned()->nullable();
-            $table->integer('sender_id')->unsigned()->nullable();
-            $table->integer('recipient_id')->unsigned()->nullable();
-            $table->integer('contact_id')->unsigned()->nullable();
-            $table->uuid('uuid')->nullable();
+            $table->integer('broadcast_message_id')->unsigned()->nullable()->index();
+            $table->integer('contact_id')->unsigned()->nullable()->index();
+            $table->integer('recipientable_id')->unsigned()->nullable();
+            $table->string('recipientable_type')->nullable();
+            $table->integer('senderable_id')->unsigned()->nullable();
+            $table->string('senderable_type')->nullable();
             $table->string('provider_internal_id')->nullable();
+            $table->string('type')->nullable(); // outgoing, incoming
             $table->float('cost', 2, 2)->nullable();
-            $table->string('status')->default('pending'); // pending, sent, error
-            $table->index('broadcast_message_id');
-            $table->index('contact_id');
-            $table->index('provider_internal_id');
+            $table->string('status')->default('pending'); // pending, sent, error, received
+
             $table->timestamps();
-//            $table->foreign('broadcast_message_id')->references('id')->on('broadcast_messages');
-//            $table->foreign('sender_id')->references('id')->on('people');
-//            $table->foreign('recipient_id')->references('id')->on('people');
-//            $table->foreign('contact_id')->references('id')->on('people');
         });
     }
 

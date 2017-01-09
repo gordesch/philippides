@@ -2,6 +2,42 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class ProcessReceivedMessage implements ShouldQueue
+{
+    use InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $message;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct(Message $message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        //
+    }
+}
+
+<?php
+
+namespace App\Jobs;
+
 use Nexmo;
 use App\BroadcastMessage;
 use App\Message;
@@ -22,9 +58,6 @@ class SendSMS implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param  BroadcastMessage  $broadcast_message
-     * @param  Message  $message
-     *
      * @return void
      */
     public function __construct(BroadcastMessage $broadcast_message, Message $message)
@@ -41,9 +74,10 @@ class SendSMS implements ShouldQueue
     public function handle()
     {
         $start_at = microtime();
+        $recipient = Person::find($this->message->recipient_id);
         $response = Nexmo::message()->send([
-            'to' => $this->message->recipientable->mobile_phone,
-            'from' => $this->message->senderable->mobile_phone,
+            'to' => $recipient->mobile_phone,
+            'from' => env('SMS_FROM'),
             'text' => $this->broadcast_message->body
         ]);
         $this->message->provider_internal_id = $response->getMessageId();
@@ -56,8 +90,8 @@ class SendSMS implements ShouldQueue
         $this->message->save();
         $end_at = microtime();
         $elapsed_time = $end_at - $start_at;
-        if ($elapsed_time < 2){
-            sleep(2 - $elapsed_time); // Nexmo Virtual Number SMS API Throttle Rate: 1 per 2 seconds
+        if ($elapsed_time < 1){
+            sleep(2 - $elapsed_time);
         }
     }
 }

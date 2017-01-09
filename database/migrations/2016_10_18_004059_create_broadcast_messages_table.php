@@ -15,14 +15,12 @@ class CreateBroadcastMessagesTable extends Migration
     {
         Schema::create('broadcast_messages', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->string('body');
             $table->integer('broadcast_list_id')->unsigned()->nullable();
-            $table->boolean('sent')->default(false);
-            $table->index('broadcast_list_id');
-            $table->index('sent');
+            $table->string('sent')->default(false);
+            $table->string('type'); // outgoing, incoming
             $table->timestamps();
-            //$table->foreign('broadcast_list_id')->references('id')->on('broadcast_lists');
         });
     }
 

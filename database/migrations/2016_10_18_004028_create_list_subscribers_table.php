@@ -15,13 +15,9 @@ class CreateListSubscribersTable extends Migration
     {
         Schema::create('list_subscribers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('person_id')->unsigned();
-            $table->integer('broadcast_list_id')->unsigned();
-            $table->index('person_id');
-            $table->index('broadcast_list_id');
+            $table->integer('person_id')->unsigned()->index();
+            $table->integer('broadcast_list_id')->unsigned()->index();
             $table->timestamps();
-            //$table->foreign('person_id')->references('id')->on('people');
-            //$table->foreign('broadcast_list_id')->references('id')->on('broadcast_lists');
         });
     }
 

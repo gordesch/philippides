@@ -19,6 +19,8 @@ class CheckMobilePhone implements ShouldQueue
     /**
      * Create a new job instance.
      *
+     * @param Person $person
+     *
      * @return void
      */
     public function __construct(Person $person)
@@ -41,8 +43,7 @@ class CheckMobilePhone implements ShouldQueue
         ]);
         $ch = curl_init($api);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $raw_response = curl_exec($ch);
-        $response = json_decode($raw_response, true);
+        $response = json_decode(curl_exec($ch), true);
         if ($response['status'] == 0)
         {
             $this->person->mobile_phone = $response['international_format_number'];

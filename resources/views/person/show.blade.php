@@ -177,4 +177,25 @@
     </ul>
 </div>
 
+<div class="panel panel-default">
+    <div class="panel-heading">Messages</div>
+    <ul class="list-group">
+        @if($person->messages->isEmpty())
+            <li class="list-group-item">Aucun message échangé</li>
+        @endif
+        <a href="{{ route('broadcast_message.create') }}" class="list-group-item list-group-item-info">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            Nouveau message
+        </a>
+        @foreach($person->messages as $message)
+            <li class="list-group-item">
+                @if ($message->type === 'incoming')
+                    <i class="fa fa-reply" aria-hidden="true"></i>
+                @endif
+                {{ $message->broadcast_message->body }}
+            </li>
+        @endforeach
+    </ul>
+</div>
+
 @endsection

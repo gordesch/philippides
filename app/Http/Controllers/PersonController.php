@@ -22,7 +22,7 @@ class PersonController extends Controller
         return view('person.create', compact('person'));
     }
 
-    public function store(Request $request, Person $person)
+    public function store(Request $request)
     {
         $this->validate($request, [
             'first_name' => 'required|string|max:255',
@@ -47,6 +47,7 @@ class PersonController extends Controller
         $person->zipcode = $request->zipcode;
         $person->city = $request->city;
         $person->mobile_phone = $request->mobile_phone;
+        $person->mobile_phone_status = 'checking';
         $person->university = $request->university;
         $person->major = $request->major;
         $person->email = $request->email;
@@ -64,7 +65,7 @@ class PersonController extends Controller
 
     public function show(Person $person)
     {
-        $person->load('list_subscribers.broadcast_list');
+        $person->load('list_subscribers.broadcast_list', 'messages.broadcast_message');
         $available_broadcast_lists = BroadcastList::whereDoesntHave('list_subscribers', function ($query) use ($person)  {
             $query->where('person_id', '=', $person->id);
         })->get();  
@@ -89,6 +90,10 @@ class PersonController extends Controller
             'comments' => '',
         ]);
 
+        if ($this->mobile_phone_changed($request, $person)){
+            $person->mobile_phone_status = 'checking';
+        }
+
         $person->update($request->all());
 
         session()->flash('flash_message', 'Contact modifié');
@@ -111,11 +116,20 @@ class PersonController extends Controller
     {
         $person->mobile_phone_status = 'checking';
         $person->save();
-        dispatch((new CheckMobilePhone($person))->onQueue('checks'));
 
         session()->flash('flash_message', 'Vérification du numéro de téléphone mobile lancée');
         session()->flash('flash_message_type', 'success');
 
         return redirect()->route('person.show', [$person]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Person $person
+     * @return bool
+     */
+    private function mobile_phone_changed(Request $request, Person $person): bool
+    {
+        return $request->mobile_phone !== $person->mobile_phone;
     }
 }

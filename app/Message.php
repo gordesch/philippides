@@ -18,8 +18,18 @@ class Message extends Model
         return $this->belongsTo(BroadcastMessage::class);
     }
 
-    public function recipient()
+    public function contact()
     {
-        return $this->belongsTo(Person::class, 'recipient_id');
+        return $this->belongsTo(Person::class, 'contact_id');
+    }
+
+    public function senderable()
+    {
+        return $this->morphTo();
+    }
+
+    public function recipientable()
+    {
+        return $this->morphTo();
     }
 }

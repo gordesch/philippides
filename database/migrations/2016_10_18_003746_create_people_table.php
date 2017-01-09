@@ -23,15 +23,15 @@ class CreatePeopleTable extends Migration
             $table->string('mobile_phone')->nullable();
             $table->string('mobile_phone_status')->default('unknown');
             $table->date('mobile_phone_checked_at')->nullable();
+            $table->integer('long_virtual_number_id')->unsigned()->nullable();
             $table->string('landline')->nullable();
             $table->string('university')->nullable();
             $table->string('year')->nullable();
-            $table->string('section_id')->nullable();
+            $table->integer('section_id')->unsigned()->nullable();
             $table->string('major')->nullable();
             $table->string('email')->nullable();
             $table->boolean('messageable')->nullable()->default(true);
             $table->text('comments')->nullable();
-            $table->index('messageable');
             $table->timestamps();
             $table->softDeletes();
         });
