@@ -171,6 +171,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         SimpleSoftwareIO\SMS\SMSServiceProvider::class,
         Nexmo\Laravel\NexmoServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
         /*
          * Application Service Providers...

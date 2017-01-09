@@ -48,8 +48,8 @@
         <ul class="list-group">
             @foreach ($messages as $message)
                 <li class="list-group-item">
-                    {{ $message->recipient->first_name }}
-                    {{ $message->recipient->last_name }}
+                    {{ $message->recipientable->first_name }}
+                    {{ $message->recipientable->last_name }}
                     @if ($message->status === 'pending')
                         <span class="label label-info">En cours d'envoi...</span>
                     @elseif ($message->status === 'sent')

@@ -8,16 +8,14 @@ use App\Jobs\CheckMobilePhone;
 class PersonObserver
 {
     /**
-     * Listen to the Person saving event.
+     * Listen to the Person saved event.
      *
      * @param  Person  $person
      * @return void
      */
-    public function saving(Person $person)
+    public function saved(Person $person)
     {
-        if (array_has($person->getDirty(), ['mobile_phone']))
-        {
-            $person->mobile_phone_status = 'checking';
+        if($person->mobile_phone_status === 'checking'){
             dispatch((new CheckMobilePhone($person))->onQueue('checks'));
         }
     }

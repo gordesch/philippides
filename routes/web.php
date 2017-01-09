@@ -26,10 +26,10 @@ Route::post('broadcast_message/{broadcast_message}/send', 'BroadcastMessageContr
 Route::resource('broadcast_list.list_subscriber', 'ListSubscriberController', ['only' => ['create', 'store', 'destroy']]);
 Route::post('list_subscriber', 'ListSubscriberController@store')->name('list_subscriber.store');
 
-
 // Webhooks
 
-Route::post('webhooks/sms/receive', 'NexmoWebhookController@receive');
+Route::get('webhooks/sms/receive', 'NexmoWebhookController@receive');
+Route::get('webhooks/sms/delivery_receipt', 'NexmoWebhookController@delivery_receipt');
 
 // Auth
 

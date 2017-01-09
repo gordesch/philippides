@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\VirtualNumber;
 use App\Person;
 use App\BroadcastMessage;
 use App\BroadcastList;
@@ -37,6 +38,7 @@ class BroadcastMessageController extends Controller
         $broadcast_message = new BroadcastMessage;
         $broadcast_message->title = $request->title;
         $broadcast_message->body = $request->body;
+        $broadcast_message->type = 'outgoing';
         $broadcast_message->broadcast_list_id = $request->broadcast_list_id;
         $broadcast_message->save();
 
@@ -50,7 +52,7 @@ class BroadcastMessageController extends Controller
     {
         $broadcast_lists = BroadcastList::all();
         $people = Person::All();
-        $messages = $broadcast_message->messages()->with('recipient')->get();;
+        $messages = $broadcast_message->messages()->with('recipientable')->get();;
         return view('broadcast_message.show', compact('broadcast_message', 'broadcast_lists', 'people', 'messages'));
     }
 
@@ -102,15 +104,14 @@ class BroadcastMessageController extends Controller
         }
         $recipients_ids = array_unique($recipients_ids);
         $recipients = Person::find($recipients_ids)->where('mobile_phone_status', 'valid');
+        $sender = VirtualNumber::find(1);
         foreach ($recipients as $recipient) {
             $message = new Message;
-            $message->broadcast_message_id = $broadcast_message->id;
-            $message->sender_id = 1;
-            $message->recipient_id = $recipient->id;
-            $message->contact_id = $recipient->id;
             $message->status = 'pending';
-            $message->save();
-
+            $message->contact_id = $recipient->id;
+            $message->broadcast_message_id = $broadcast_message->id;
+            $sender->messages_sent()->save($message);
+            $recipient->messages_received()->save($message);
             dispatch((new SendSMS($broadcast_message, $message))->onQueue('2-way-sms-' . '1'));
         }
         $broadcast_message->sent = true;
