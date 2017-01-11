@@ -5,9 +5,9 @@ namespace App;
 use App\Scopes\SectionScope;
 use Illuminate\Database\Eloquent\Model;
 
-class BroadcastList extends Model
+class Sending extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['title', 'body'];
     protected $with = ['section'];
 
     protected static function boot()
@@ -17,14 +17,14 @@ class BroadcastList extends Model
         static::addGlobalScope(new SectionScope);
     }
 
-    public function sendings()
+    public function broadcast_list()
     {
-        return $this->belongsToMany(Sending::class);
+        return $this->belongsToMany(BroadcastList::class);
     }
 
-    public function list_subscribers()
+    public function messages()
     {
-        return $this->belongsToMany(Person::class);
+        return $this->hasMany(Message::class);
     }
 
     public function section()

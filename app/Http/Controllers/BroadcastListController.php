@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Person;
 use App\BroadcastList;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 
 class BroadcastListController extends Controller
 {
     public function index()
     {
         $broadcast_lists = BroadcastList::all();
+
         return view('broadcast_list.index', compact('broadcast_lists'));
     }
 
     public function create()
     {
-        return view('broadcast_list.create', compact('broadcast_list'));
+        return view('broadcast_list.create');
     }
 
     public function store(Request $request)
@@ -27,10 +28,10 @@ class BroadcastListController extends Controller
 
         $broadcast_list = new BroadcastList;
         $broadcast_list->name = $request->name;
-        $broadcast_list->slug = str_slug($broadcast_list->name);
+        $broadcast_list->section_id = session('section_id');
         $broadcast_list->save();
 
-        session()->flash('flash_message', 'Liste "' . $broadcast_list->name . '" créée');
+        session()->flash('flash_message', 'Liste créée');
         session()->flash('flash_message_type', 'success');
 
         return redirect()->route('broadcast_list.index');
@@ -38,7 +39,8 @@ class BroadcastListController extends Controller
 
     public function show(BroadcastList $broadcast_list)
     {
-        $broadcast_list->load('list_subscribers.person', 'broadcast_messages');
+        $broadcast_list->load('list_subscribers', 'sendings');
+
         return view('broadcast_list.show', compact('broadcast_list'));
     }
 
@@ -46,13 +48,13 @@ class BroadcastListController extends Controller
     {
         $broadcast_list->update($request->all());
 
-        session()->flash('flash_message', 'Liste "' . $broadcast_list->name . '" modifiée');
+        session()->flash('flash_message', 'Liste modifiée');
         session()->flash('flash_message_type', 'success');
 
-        return back();
+        return view('broadcast_list.show', compact('broadcast_list'));
     }
 
-    public function destroy(Request $request, BroadcastList $broadcast_list)
+    public function destroy(BroadcastList $broadcast_list)
     {
         $broadcast_list->delete();
 
@@ -60,5 +62,32 @@ class BroadcastListController extends Controller
         session()->flash('flash_message_type', 'success');
 
         return redirect()->route('broadcast_list.index');
+    }
+
+    public function subscription(BroadcastList $broadcast_list)
+    {
+        $people = Person::all();
+
+        return view('broadcast_list.subscription', compact('broadcast_list', 'people'));
+    }
+
+    public function subscribe(Person $person, BroadcastList $broadcast_list)
+    {
+        $person->broadcast_lists()->attach($broadcast_list->id);
+
+        session()->flash('flash_message', 'Contact ajouté à la liste');
+        session()->flash('flash_message_type', 'success');
+
+        return redirect()->route('broadcast_list.show', [$broadcast_list]);
+    }
+
+    public function unsubscribe(Person $person, BroadcastList $broadcast_list)
+    {
+        $person->broadcast_lists()->detach($broadcast_list->id);
+
+        session()->flash('flash_message', 'Contact retiré de la liste');
+        session()->flash('flash_message_type', 'success');
+
+        return redirect()->route('broadcast_list.show', [$broadcast_list]);
     }
 }

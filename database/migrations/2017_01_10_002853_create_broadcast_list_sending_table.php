@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBroadcastListMessagesTable extends Migration
+class CreateBroadcastListSendingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateBroadcastListMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('broadcast_list_messages', function (Blueprint $table) {
+        Schema::create('broadcast_list_sending', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('broadcast_message_id')->unsigned()->index();
-            $table->integer('broadcast_list_id')->unsigned()->index();
+            $table->integer('broadcast_list_id')->unsigned()->nullable();
+            $table->integer('sending_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateBroadcastListMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('broadcast_list_messages');
+        Schema::dropIfExists('broadcast_list_sending');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,15 +11,5 @@ class VirtualNumber extends Model
     public function people()
     {
         return $this->hasMany(Person::class);
-    }
-
-    public function messages_sent()
-    {
-        return $this->morphMany(Message::class, 'senderable');
-    }
-
-    public function messages_received()
-    {
-        return $this->morphMany(Message::class, 'recipientable');
     }
 }

@@ -126,6 +126,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Global Section Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Name of your board section, that will be the name of the "global" section of your organization
+    |
+    */
+
+    'global_section_name' => 'Bureau national',
+    'datetime' => [
+        'full' => 'd/m/y \à H\hi',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -232,7 +246,6 @@ return [
 
         // Custom
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Uuid' => Webpatser\Uuid\Uuid::class,
         'SMS' => SimpleSoftwareIO\SMS\Facades\SMS::class,
         'Nexmo' => \Nexmo\Laravel\Facade\Nexmo::class,
 

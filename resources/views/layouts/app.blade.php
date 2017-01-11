@@ -72,7 +72,7 @@
                     </li>
                     <?php
                     if(!empty(Request::segments())) {
-                        if(Request::segments()[0] === ('broadcast_message')) {
+                        if(Request::segments()[0] === ('sending')) {
                             echo '<li class="active">';
                         } else {
                             echo '<li>';
@@ -81,18 +81,23 @@
                         echo '<li>';
                     }
                     ?>
-                    <a href="{{ route('broadcast_message.index') }}">
+                    <a href="{{ route('sending.index') }}">
                         <i class="fa fa-envelope" aria-hidden="true"></i>
-                        Messages
+                        Envois
                     </a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    @if (Auth::guest())
+                @if (Auth::guest())
+                    <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ url('/login') }}" class="">Se connecter</a></li>
-                    @else
+                    </ul>
+                @else
+                    <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                {{ Auth::user()->person->first_name }}
+                                {{ Auth::user()->person->last_name }}
+                                <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="{{ url('/logout') }}"
@@ -107,10 +112,32 @@
                                 </li>
                             </ul>
                         </li>
-                    @endif
-                </ul>
+                        @if(Auth::user()->role->scope !== 'section')
+                            <li>
+                                <form class="navbar-form">
+                                    <select name="section_id" class="form-control">
+
+                                            @foreach(\App\Section::all() as $section)
+                                                <option
+                                                        value="{{ $section->id }}"
+                                                        @if(session('section_id') === $section->id)
+                                                        selected
+                                                        @endif
+                                                >
+                                                    {{ $section->name }}
+                                                </option>
+                                            @endforeach
+
+                                    </select>
+                                </form>
+                            </li>
+                        @endif
+                    </ul>
+                @endif
             </div>
         </nav>
+
+        @yield('breadcrumb')
 
         @if(Session::has('flash_message'))
             <div class="alert alert-{{ Session::get('flash_message_type') }} fade in" role="alert">

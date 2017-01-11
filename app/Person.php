@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\SectionScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -11,15 +12,18 @@ class Person extends Model
 
     protected $dates = ['deleted_at', 'mobile_phone_checked_at'];
     protected $fillable = ['first_name', 'last_name', 'address', 'zipcode', 'city', 'mobile_phone', 'landline', 'university', 'major', 'email', 'messageable', 'comments'];
+    protected $with = ['section'];
 
-    public function list_subscribers()
+    protected static function boot()
     {
-        return $this->hasMany(ListSubscriber::class);
+        parent::boot();
+
+        static::addGlobalScope(new SectionScope);
     }
 
-    public function long_virtual_number()
+    public function broadcast_lists()
     {
-        return $this->belongsTo(VirtualNumber::class, 'long_virtual_number_id');
+        return $this->belongsToMany(BroadcastList::class);
     }
 
     public function messages()
@@ -35,5 +39,20 @@ class Person extends Model
     public function messages_received()
     {
         return $this->morphMany(Message::class, 'recipientable');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public function virtual_number()
+    {
+        return $this->belongsTo(VirtualNumber::class);
     }
 }

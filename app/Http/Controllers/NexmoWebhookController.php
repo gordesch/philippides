@@ -3,30 +3,30 @@
 namespace App\Http\Controllers;
 
 use SMS;
-use Log;
 use App\Message;
 use App\Person;
-use App\BroadcastMessage;
-use Illuminate\Http\Request;
-use App\Mail\MessageReceived;
-use Illuminate\Support\Facades\Mail;
+use App\Sending;
 
 class NexmoWebhookController extends Controller
 {
     public function receive(){
         $incoming = SMS::receive();
-        //Log::debug($incoming->raw());
         $sender = Person::where('mobile_phone', $incoming->from())->first();
-        $broadcast_message = new BroadcastMessage;
-        $broadcast_message->body = $incoming->message();
-        $broadcast_message->type = 'incoming';
-        $broadcast_message->save();
+        $recipient = $sender->section;
+
+        $sending = new Sending;
+        $sending->body = $incoming->message();
+        $sending->type = 'incoming';
+        $sending->section_id = $sender->section_id;
+        $sending->save();
+
         $message = new Message;
         $message->status = 'incoming';
-        $message->sender_id = $sender->id;
-        $message->contact_id = $sender->id;
+        $sender->messages_sent()->save($message);
+        $recipient->messages_received()->save($message);
         $message->provider_internal_id = $incoming->id();
-        $message->broadcast_message_id = $broadcast_message->id;
+        $message->sending_id = $sending->id;
+        $message->section_id = $sender->section_id;
         $message->save();
 
         //Get the phone number the message was sent to

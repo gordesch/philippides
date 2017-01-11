@@ -2,25 +2,23 @@
 
 namespace App;
 
+use App\Scopes\SectionScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $fillable = ['broadcast_message_id', 'person_id', 'ovh_sms_id', 'choices'];
+    protected $with = ['section', 'sending.broadcast_list', 'senderable', 'recipientable'];
 
-    public function broadcast_list()
+    protected static function boot()
     {
-        return $this->belongsTo(BroadcastList::class);
+        parent::boot();
+
+        static::addGlobalScope(new SectionScope);
     }
 
-    public function broadcast_message()
+    public function recipientable()
     {
-        return $this->belongsTo(BroadcastMessage::class);
-    }
-
-    public function contact()
-    {
-        return $this->belongsTo(Person::class, 'contact_id');
+        return $this->morphTo();
     }
 
     public function senderable()
@@ -28,8 +26,13 @@ class Message extends Model
         return $this->morphTo();
     }
 
-    public function recipientable()
+    public function section()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Section::class);
+    }
+
+    public function sending()
+    {
+        return $this->belongsTo(sending::class);
     }
 }

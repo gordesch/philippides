@@ -21,19 +21,18 @@
             Nouveau contact
         </a>
         @foreach($people as $person)
-        <li class="list-group-item">
-            {{ $person->first_name }} {{ $person->last_name }} 
-            <a href="{{ route('person.show', [$person] ) }}" class="btn btn-sm btn-default">
-                Détails
+            <a href="{{ route('person.show', [$person] ) }}" class="list-group-item">
+                {{ $person->first_name }} {{ $person->last_name }}
+                @if ($person->mobile_phone_status === 'valid')
+                    <span class="pull-right label label-success">N° de mobile vérifié</span>
+                @elseif ($person->mobile_phone_status === 'unknown')
+                    <span class="pull-right label label-warning">N° de mobile non vérifié</span>
+                @elseif ($person->mobile_phone_status === 'not_valid')
+                    <span class="pull-right label label-danger">N° de mobile invalide</span>
+                @elseif ($person->mobile_phone_status === 'checking')
+                    <span class="pull-right label label-info">N° de mobile en cours de vérification...</span>
+                @endif
             </a>
-            <form method="POST" action="{{ route('person.destroy', [$person]) }}" style="display:inline;">
-                {{ method_field('DELETE') }}
-                {{ csrf_field() }}
-                <button type="submit" class="btn btn-sm btn-danger">
-                    Supprimer
-                </button>
-            </form>
-        </li>
         @endforeach
     </ul>
 </div>

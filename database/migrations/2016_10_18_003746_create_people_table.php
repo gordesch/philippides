@@ -23,11 +23,11 @@ class CreatePeopleTable extends Migration
             $table->string('mobile_phone')->nullable();
             $table->string('mobile_phone_status')->default('unknown');
             $table->date('mobile_phone_checked_at')->nullable();
-            $table->integer('long_virtual_number_id')->unsigned()->nullable();
+            $table->integer('virtual_number_id')->unsigned()->nullable();
             $table->string('landline')->nullable();
             $table->string('university')->nullable();
             $table->string('year')->nullable();
-            $table->integer('section_id')->unsigned()->nullable();
+            $table->integer('section_id')->unsigned();
             $table->string('major')->nullable();
             $table->string('email')->nullable();
             $table->boolean('messageable')->nullable()->default(true);
@@ -35,6 +35,15 @@ class CreatePeopleTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // Initial config
+        DB::table('people')->insert(
+            array(
+                'last_name' => 'ADMIN',
+                'first_name' => 'Admin',
+                'section_id' => 1,
+            )
+        );
     }
 
     /**

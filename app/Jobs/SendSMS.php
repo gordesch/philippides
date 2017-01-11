@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use Nexmo;
-use App\BroadcastMessage;
+use App\Sending;
 use App\Message;
 use App\Person;
 use Carbon\Carbon;
@@ -17,20 +17,20 @@ class SendSMS implements ShouldQueue
     use InteractsWithQueue, Queueable, SerializesModels;
 
     protected $message;
-    protected $broadcast_message;
+    protected $sending;
 
     /**
      * Create a new job instance.
      *
-     * @param  BroadcastMessage  $broadcast_message
+     * @param  Sending  $sending
      * @param  Message  $message
      *
      * @return void
      */
-    public function __construct(BroadcastMessage $broadcast_message, Message $message)
+    public function __construct(Sending $sending, Message $message)
     {
         $this->message = $message;
-        $this->broadcast_message = $broadcast_message;
+        $this->sending = $sending;
     }
 
     /**
@@ -43,7 +43,7 @@ class SendSMS implements ShouldQueue
         $start_at = microtime();
         $response = Nexmo::message()->send([
             'to' => $this->message->recipientable->mobile_phone,
-            'from' => $this->message->senderable->mobile_phone,
+            'from' => $this->message->contact->virtual_number->mobile_phone,
             'text' => $this->broadcast_message->body
         ]);
         $this->message->provider_internal_id = $response->getMessageId();

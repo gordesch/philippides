@@ -5,21 +5,19 @@ namespace App\Http\Controllers;
 use App\Person;
 use App\BroadcastList;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Jobs\CheckMobilePhone;
-use App\Http\Controllers\Controller;
 
 class PersonController extends Controller
 {
     public function index()
     {
         $people = Person::all();
+
         return view('person.index', compact('people'));
     }
 
     public function create()
     {
-        return view('person.create', compact('person'));
+        return view('person.create');
     }
 
     public function store(Request $request)
@@ -30,14 +28,14 @@ class PersonController extends Controller
             'address' => 'string|max:255',
             'zipcode' => 'integer',
             'city' => 'string|max:255',
-            'mobile_phone' => 'max:255',
-            'landline' => 'max:255',
-            'mobile_phone' => 'max:255',
+            'mobile_phone' => 'max:255|unique',
+            'landline' => 'string|max:255',
             'university' => 'string|max:255',
             'major' => 'string|max:255',
             'email' => 'email|max:255',
             'messageable' => 'boolean',
-            'comments' => '',
+            'comments' => 'string',
+            'section_id' => 'same:' . session('section_id'),
         ]);
 
         $person = new Person;
@@ -53,7 +51,7 @@ class PersonController extends Controller
         $person->email = $request->email;
         $person->messageable = $request->messageable;
         $person->comments = $request->comments;
-        $person->section_id = 1;
+        $person->section_id = session('section_id');
 
         $person->save();
 
@@ -65,7 +63,7 @@ class PersonController extends Controller
 
     public function show(Person $person)
     {
-        $person->load('list_subscribers.broadcast_list', 'messages.broadcast_message');
+        $person->load('broadcast_lists', 'messages.sending');
         $available_broadcast_lists = BroadcastList::whereDoesntHave('list_subscribers', function ($query) use ($person)  {
             $query->where('person_id', '=', $person->id);
         })->get();  
@@ -82,7 +80,6 @@ class PersonController extends Controller
             'city' => 'string|max:255',
             'mobile_phone' => 'max:255',
             'landline' => 'max:255',
-            'mobile_phone' => 'max:255',
             'university' => 'string|max:255',
             'major' => 'string|max:255',
             'email' => 'email|max:255',
@@ -90,11 +87,14 @@ class PersonController extends Controller
             'comments' => '',
         ]);
 
-        if ($this->mobile_phone_changed($request, $person)){
-            $person->mobile_phone_status = 'checking';
-        }
+        $mobile_phone_changed = $this->mobile_phone_changed($request, $person);
 
         $person->update($request->all());
+
+        if($mobile_phone_changed){
+            $person->mobile_phone_status = 'checking';
+            $person->save();
+        }
 
         session()->flash('flash_message', 'Contact modifié');
         session()->flash('flash_message_type', 'success');
@@ -118,6 +118,26 @@ class PersonController extends Controller
         $person->save();
 
         session()->flash('flash_message', 'Vérification du numéro de téléphone mobile lancée');
+        session()->flash('flash_message_type', 'success');
+
+        return redirect()->route('person.show', [$person]);
+    }
+
+    public function subscribe(Request $request, Person $person)
+    {
+        $person->broadcast_lists()->attach($request->broadcast_list_id);
+
+        session()->flash('flash_message', 'Contact ajouté à la liste');
+        session()->flash('flash_message_type', 'success');
+
+        return redirect()->route('person.show', [$person]);
+    }
+
+    public function unsubscribe(Person $person, BroadcastList $broadcast_list)
+    {
+        $person->broadcast_lists()->detach($broadcast_list->id);
+
+        session()->flash('flash_message', 'Contact retiré de la liste');
         session()->flash('flash_message_type', 'success');
 
         return redirect()->route('person.show', [$person]);

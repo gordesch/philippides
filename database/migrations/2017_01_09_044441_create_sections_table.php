@@ -15,8 +15,17 @@ class CreateSectionsTable extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->boolean('global')->default(false);
             $table->timestamps();
         });
+
+        // Initial config
+        DB::table('sections')->insert(
+            array(
+                'name' => config('app.global_section_name'),
+                'global' => true,
+            )
+        );
     }
 
     /**

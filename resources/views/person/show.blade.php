@@ -20,7 +20,25 @@
             
             {{ method_field('PATCH') }}
             {{ csrf_field() }}
-            
+
+            <div class="form-group">
+                <label for="section_id">Section</label>
+                <select name="section_id" class="form-control">
+                    @if(Auth::user()->role->scope === 'section')
+                        <option value="{{ $person->section->id }}" selected>{{ $person->section->name }}</option>
+                    @else
+                        @foreach(\App\Section::all() as $section)
+                            <option
+                                value="{{ $section->id }}"
+                                @if(old('section_id', $person->section_id) === $section->id)
+                                    selected
+                                @endif
+                            >{{ $section->name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="first_name">Prénom</label>
                 <input type="text" name="first_name" value="{{ old('first_name', $person->first_name) }}" placeholder="Inès" class="form-control">
@@ -123,18 +141,18 @@
 <div class="panel panel-default">
     <div class="panel-heading">Inscriptions à des listes de diffusion</div>
     <ul class="list-group">
-        @if($person->list_subscribers->isEmpty())
+        @if($person->broadcast_lists->isEmpty())
             <li class="list-group-item">Contact abonné à aucune liste</li>
         @endif
         <li class="list-group-item">
-            <form method="POST" action="{{ route('list_subscriber.store') }}" class="form-inline">
+            <form method="POST" action="{{ route('person.subscribe', [$person]) }}" class="form-inline">
                 {{ csrf_field() }}
                 <input type="hidden" name="creation_origin" value="person">
                 <input type="hidden" name="person_id" value="{{ $person->id }}">
                 <div class="form-group">
                     @if($available_broadcast_lists->isEmpty())
                         <select class="form-control" disabled>
-                            <option><em>-- Aucune liste disponible --</em></option>
+                            <option>-- Aucune liste disponible --</option>
                         </select>
                     @else
                         <select name="broadcast_list_id" class="form-control">
@@ -158,16 +176,15 @@
                 </div>
             </form>
         </li>
-        @foreach($person->list_subscribers as $list_subscriber)
+        @foreach($person->broadcast_lists as $broadcast_list)
         <li class="list-group-item">
-            {{ $list_subscriber->broadcast_list->name }}
-            <a href="{{ route('broadcast_list.show', [$list_subscriber->broadcast_list]) }}" class="btn btn-sm btn-default">
+            {{ $broadcast_list->name }}
+            <a href="{{ route('broadcast_list.show', [$broadcast_list]) }}" class="btn btn-sm btn-default">
                 Détails de la liste
             </a>
-            <form method="POST" action="{{ route('broadcast_list.list_subscriber.destroy', [$list_subscriber->broadcast_list, $list_subscriber]) }}" style="display:inline;">
-                {{ method_field('DELETE') }}
+            <form method="POST" action="{{ route('person.unsubscribe', [$person, $broadcast_list]) }}" style="display:inline;">
+                {{ method_field('POST') }}
                 {{ csrf_field() }}
-                <input type="hidden" name="deletion_origin" value="person">
                 <button type="submit" class="btn btn-sm btn-danger">
                     Désinscrire
                 </button>
@@ -183,7 +200,7 @@
         @if($person->messages->isEmpty())
             <li class="list-group-item">Aucun message échangé</li>
         @endif
-        <a href="{{ route('broadcast_message.create') }}" class="list-group-item list-group-item-info">
+        <a href="{{ route('sending.create') }}" class="list-group-item list-group-item-info">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
             Nouveau message
         </a>
@@ -192,7 +209,7 @@
                 @if ($message->type === 'incoming')
                     <i class="fa fa-reply" aria-hidden="true"></i>
                 @endif
-                {{ $message->broadcast_message->body }}
+                {{ $message->sending->body }}
             </li>
         @endforeach
     </ul>

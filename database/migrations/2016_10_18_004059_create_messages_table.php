@@ -15,8 +15,8 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('broadcast_message_id')->unsigned()->nullable()->index();
-            $table->integer('contact_id')->unsigned()->nullable()->index();
+            $table->integer('sending_id')->unsigned()->nullable();
+            $table->integer('contact_id')->unsigned()->nullable();
             $table->integer('recipientable_id')->unsigned()->nullable();
             $table->string('recipientable_type')->nullable();
             $table->integer('senderable_id')->unsigned()->nullable();
@@ -25,7 +25,8 @@ class CreateMessagesTable extends Migration
             $table->string('type')->nullable(); // outgoing, incoming
             $table->float('cost', 2, 2)->nullable();
             $table->string('status')->default('pending'); // pending, sent, error, received
-
+            $table->integer('section_id')->unsigned()->nullable();
+            $table->boolean('global')->default(false);
             $table->timestamps();
         });
     }
