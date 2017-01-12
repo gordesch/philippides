@@ -16,7 +16,7 @@ class CreateBroadcastListsTable extends Migration
         Schema::create('broadcast_lists', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('section_id')->unsigned()->nullable();
+            $table->integer('section_id')->unsigned()->nullable()->index();
             $table->boolean('global')->default(false);
             $table->timestamps();
         });

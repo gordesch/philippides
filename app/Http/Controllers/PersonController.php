@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Person;
 use App\BroadcastList;
+use App\Http\Requests\PersonRequest;
 use Illuminate\Http\Request;
+use Event;
+use Debugbar;
 
 class PersonController extends Controller
 {
@@ -20,24 +23,8 @@ class PersonController extends Controller
         return view('person.create');
     }
 
-    public function store(Request $request)
+    public function store(PersonRequest $request)
     {
-        $this->validate($request, [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'address' => 'string|max:255',
-            'zipcode' => 'integer',
-            'city' => 'string|max:255',
-            'mobile_phone' => 'max:255|unique',
-            'landline' => 'string|max:255',
-            'university' => 'string|max:255',
-            'major' => 'string|max:255',
-            'email' => 'email|max:255',
-            'messageable' => 'boolean',
-            'comments' => 'string',
-            'section_id' => 'same:' . session('section_id'),
-        ]);
-
         $person = new Person;
         $person->first_name = $request->first_name;
         $person->last_name = $request->last_name;
@@ -51,7 +38,7 @@ class PersonController extends Controller
         $person->email = $request->email;
         $person->messageable = $request->messageable;
         $person->comments = $request->comments;
-        $person->section_id = session('section_id');
+        $person->section_id = session('section')->id;
 
         $person->save();
 
@@ -70,23 +57,8 @@ class PersonController extends Controller
         return view('person.show', compact('person', 'available_broadcast_lists'));
     }
 
-    public function update(Request $request, Person $person)
+    public function update(PersonRequest $request, Person $person)
     {
-        $this->validate($request, [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'address' => 'string|max:255',
-            'zipcode' => 'integer',
-            'city' => 'string|max:255',
-            'mobile_phone' => 'max:255',
-            'landline' => 'max:255',
-            'university' => 'string|max:255',
-            'major' => 'string|max:255',
-            'email' => 'email|max:255',
-            'messageable' => 'boolean',
-            'comments' => '',
-        ]);
-
         $mobile_phone_changed = $this->mobile_phone_changed($request, $person);
 
         $person->update($request->all());
@@ -143,11 +115,6 @@ class PersonController extends Controller
         return redirect()->route('person.show', [$person]);
     }
 
-    /**
-     * @param Request $request
-     * @param Person $person
-     * @return bool
-     */
     private function mobile_phone_changed(Request $request, Person $person): bool
     {
         return $request->mobile_phone !== $person->mobile_phone;

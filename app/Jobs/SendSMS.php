@@ -5,8 +5,6 @@ namespace App\Jobs;
 use Nexmo;
 use App\Sending;
 use App\Message;
-use App\Person;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,10 +20,9 @@ class SendSMS implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param  Sending  $sending
-     * @param  Message  $message
+     * @param  Sending $sending
+     * @param  Message $message
      *
-     * @return void
      */
     public function __construct(Sending $sending, Message $message)
     {
@@ -42,8 +39,8 @@ class SendSMS implements ShouldQueue
     {
         $start_at = microtime();
         $response = Nexmo::message()->send([
-            'to' => $this->message->recipientable->mobile_phone,
-            'from' => $this->message->contact->virtual_number->mobile_phone,
+            'to' => $this->message->recipientable()->mobile_phone,
+            'from' => $this->message->senderable()->virtual_number()->number,
             'text' => $this->broadcast_message->body
         ]);
         $this->message->provider_internal_id = $response->getMessageId();

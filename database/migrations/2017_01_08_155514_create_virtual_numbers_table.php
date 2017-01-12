@@ -15,7 +15,8 @@ class CreateVirtualNumbersTable extends Migration
     {
         Schema::create('virtual_numbers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('mobile_phone');
+            $table->string('name'); // ex: Sections 2-way-sms, Global Marketing...
+            $table->string('number');
             $table->string('type'); // long, short
             $table->timestamps();
         });

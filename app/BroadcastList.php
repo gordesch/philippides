@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class BroadcastList extends Model
 {
     protected $fillable = ['name'];
-    protected $with = ['section'];
 
     protected static function boot()
     {

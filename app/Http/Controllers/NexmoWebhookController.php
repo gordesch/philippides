@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\VirtualNumber;
 use SMS;
 use App\Message;
 use App\Person;
@@ -12,7 +13,7 @@ class NexmoWebhookController extends Controller
     public function receive(){
         $incoming = SMS::receive();
         $sender = Person::where('mobile_phone', $incoming->from())->first();
-        $recipient = $sender->section;
+        $recipient = VirtualNumber::where($incoming->from())->ownerable();
 
         $sending = new Sending;
         $sending->body = $incoming->message();

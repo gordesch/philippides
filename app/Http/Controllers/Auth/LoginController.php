@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Section;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -40,6 +41,11 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        session(['section_id' => $user->person->section_id]);
+        if (!session('user')) {
+            $user->load('person.section', 'role');
+            session(['user' => $user]);
+            session(['section' => $user->person->section]);
+            session(['sections' => Section::all()]);
+        }
     }
 }

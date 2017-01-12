@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Sending extends Model
 {
     protected $fillable = ['title', 'body'];
-    protected $with = ['section'];
 
     protected static function boot()
     {
@@ -17,7 +16,7 @@ class Sending extends Model
         static::addGlobalScope(new SectionScope);
     }
 
-    public function broadcast_list()
+    public function broadcast_lists()
     {
         return $this->belongsToMany(BroadcastList::class);
     }

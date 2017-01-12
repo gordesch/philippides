@@ -35,7 +35,7 @@ class SendingController extends Controller
         $sending->title = $request->title;
         $sending->body = $request->body;
         $sending->type = 'outgoing';
-        $sending->section_id = session('section_id');
+        $sending->section_id = session('section')->id;
         $sending->save();
 
         session()->flash('flash_message', 'Envoi créé');
@@ -47,7 +47,7 @@ class SendingController extends Controller
     public function show(Sending $sending)
     {
         $broadcast_lists = BroadcastList::all();
-        $people = Person::all();
+        $people = Person::all()->where('mobile_phone_status', 'valid');
         $messages = $sending->messages();
         return view('sending.show', compact('sending', 'broadcast_lists', 'people', 'messages'));
     }
@@ -80,9 +80,34 @@ class SendingController extends Controller
 
     public function send(Request $request, Sending $sending)
     {
+        $sender = session('user');
+        $sender_number = session('section')->virtual_number()->number;
+        $recipients = $this->find_individual_recipients($request);
+        foreach ($recipients as $recipient) {
+            $message = new Message;
+            $message->status = 'pending';
+            $message->contact_id = $recipient->id;
+            $message->sending_id = $sending->id;
+            $message->section_id = session('section')->id;
+            $sender->messages_sent()->save($message);
+            $recipient->messages_received()->save($message);
+            dispatch((new SendSMS($sending, $message))
+                ->onQueue('2-way-sms-' . $sender_number));
+        }
+        $sending->sent = true;
+        $sending->save();
+
+        session()->flash('flash_message', 'Envoi envoyé');
+        session()->flash('flash_message_type', 'success');
+
+        return redirect()->route('sending.show', [$sending]);
+    }
+
+    private function find_individual_recipients(Request $request)
+    {
         $recipients_ids = [];
-        if ($request['people_ids']) {
-            $recipients_ids = array_flatten($request['people_ids']);
+        if ($request['person_ids']) {
+            $recipients_ids = array_flatten($request['person_ids']);
         }
         if ($request['broadcast_list_ids']) {
             $broadcast_list_ids = array_flatten($request['broadcast_list_ids']);
@@ -95,23 +120,7 @@ class SendingController extends Controller
             }
         }
         $recipients_ids = array_unique($recipients_ids);
-        $recipients = Person::find($recipients_ids)->where('mobile_phone_status', 'valid')->with('virtual_number');
-        foreach ($recipients as $recipient) {
-            $message = new Message;
-            $message->status = 'pending';
-            $message->contact_id = $recipient->id;
-            $message->sending_id = $sending->id;
-            $message->section_id = session('section_id');
-            Auth::user()->messages_sent()->save($message);
-            $recipient->messages_received()->save($message);
-            dispatch((new SendSMS($sending, $message))->onQueue('2-way-sms-' . $recipient->virtual_number->mobile_phone));
-        }
-        $sending->sent = true;
-        $sending->save();
-
-        session()->flash('flash_message', 'Envoi envoyé');
-        session()->flash('flash_message_type', 'success');
-
-        return redirect()->route('sending.show', [$sending]);
+        $recipients = Person::find($recipients_ids)->where('mobile_phone_status', 'valid');
+        return $recipients;
     }
 }

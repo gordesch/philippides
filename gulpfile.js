@@ -14,10 +14,13 @@ require('laravel-elixir-vue-2');
  */
 
 elixir(mix => {
-    mix.styles([
-            "bootstrap.min.css",
-            "bootstrap-theme.min.css"],
-            "public/css/app.css", "resources/assets/custom-bootstrap-v3.3.7/css")
+    mix.styles(
+            [
+                "bootstrap.min.css",
+                "bootstrap-theme.min.css"
+            ],
+            "public/css/app.css",
+            "resources/assets/custom-bootstrap-v3.3.7/css")
        .scripts([
             './vendor/components/jquery/jquery.min.js',
             './resources/assets/custom-bootstrap-v3.3.7/js/bootstrap.min.js',

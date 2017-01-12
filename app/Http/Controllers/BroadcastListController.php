@@ -28,7 +28,7 @@ class BroadcastListController extends Controller
 
         $broadcast_list = new BroadcastList;
         $broadcast_list->name = $request->name;
-        $broadcast_list->section_id = session('section_id');
+        $broadcast_list->section_id = session('section')->id;
         $broadcast_list->save();
 
         session()->flash('flash_message', 'Liste créée');

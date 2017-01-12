@@ -24,7 +24,7 @@
             <div class="form-group">
                 <label for="section_id">Section</label>
                 <select name="section_id" class="form-control">
-                    @if(Auth::user()->role->scope === 'section')
+                    @if(session('user')->role->scope === 'section')
                         <option value="{{ $person->section->id }}" selected>{{ $person->section->name }}</option>
                     @else
                         @foreach(\App\Section::all() as $section)

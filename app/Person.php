@@ -12,7 +12,6 @@ class Person extends Model
 
     protected $dates = ['deleted_at', 'mobile_phone_checked_at'];
     protected $fillable = ['first_name', 'last_name', 'address', 'zipcode', 'city', 'mobile_phone', 'landline', 'university', 'major', 'email', 'messageable', 'comments'];
-    protected $with = ['section'];
 
     protected static function boot()
     {
@@ -49,10 +48,5 @@ class Person extends Model
     public function user()
     {
         return $this->hasOne(User::class);
-    }
-
-    public function virtual_number()
-    {
-        return $this->belongsTo(VirtualNumber::class);
     }
 }

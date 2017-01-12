@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBroadcastListPersonTable extends Migration
+class CreateVirtualNumberablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateBroadcastListPersonTable extends Migration
      */
     public function up()
     {
-        Schema::create('broadcast_list_person', function (Blueprint $table) {
+        Schema::create('virtual_numberables', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('broadcast_list_id')->unsigned()->nullable()->index();
-            $table->integer('person_id')->unsigned()->nullable()->index();
+            $table->integer('virtual_number_id')->index();
+            $table->integer('virtual_numberable_id')->index();
+            $table->integer('virtual_numberable_type'); // section, user
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateBroadcastListPersonTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('broadcast_list_person');
+        Schema::dropIfExists('virtual_numberables');
     }
 }

@@ -15,8 +15,8 @@ class CreateBroadcastListSendingTable extends Migration
     {
         Schema::create('broadcast_list_sending', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('broadcast_list_id')->unsigned()->nullable();
-            $table->integer('sending_id')->unsigned()->nullable();
+            $table->integer('broadcast_list_id')->unsigned()->nullable()->index();
+            $table->integer('sending_id')->unsigned()->nullable()->index();
             $table->timestamps();
         });
     }

@@ -12,13 +12,7 @@ class User extends Authenticatable
 
     protected $fillable = ['name', 'email', 'password',];
     protected $hidden = ['password', 'remember_token',];
-    protected $with = ['person.section', 'role'];
-    protected $sections;
 
-    public function broadcast_lists()
-    {
-        return $this->belongsToMany(BroadcastList::class);
-    }
     public function messages_sent()
     {
         return $this->morphMany(Message::class, 'senderable');
@@ -32,5 +26,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function virtual_number()
+    {
+        return $this->morphToMany(VirtualNumber::class, 'virtual_numberables');
     }
 }

@@ -24,7 +24,7 @@
             <a href="{{ route('broadcast_list.show', [$broadcast_list] ) }}" class="list-group-item">
                 {{ $broadcast_list->name }}
                 <span class="pull-right label label-default">
-                    {{ $broadcast_list->list_subscribers->count() }} abonnés
+                    {{ $broadcast_list->list_subscribers()->count() }} abonnés
                 </span>
             </a>
         @endforeach

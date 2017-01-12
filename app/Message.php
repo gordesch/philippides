@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $with = ['section', 'sending.broadcast_list', 'senderable', 'recipientable'];
-
     protected static function boot()
     {
         parent::boot();
