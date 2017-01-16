@@ -18,18 +18,13 @@ class User extends Authenticatable
         return $this->morphMany(Message::class, 'senderable');
     }
 
-    public function person()
-    {
-        return $this->belongsTo(Person::class);
-    }
-
     public function role()
     {
         return $this->belongsTo(Role::class);
     }
 
-    public function virtual_number()
+    public function section()
     {
-        return $this->morphToMany(VirtualNumber::class, 'virtual_numberables');
+        return $this->belongsTo(Section::class);
     }
 }

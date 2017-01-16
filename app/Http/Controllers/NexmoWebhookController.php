@@ -13,7 +13,7 @@ class NexmoWebhookController extends Controller
     public function receive(){
         $incoming = SMS::receive();
         $sender = Person::where('mobile_phone', $incoming->from())->first();
-        $recipient = VirtualNumber::where($incoming->from())->ownerable();
+        $recipient = $sender->section();
 
         $sending = new Sending;
         $sending->body = $incoming->message();

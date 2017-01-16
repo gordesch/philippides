@@ -4,7 +4,7 @@
         @if(session('user')->role->scope === 'section')
             <option value="{{ session('user')->person->section->id }}" selected>{{ session('user')->person->section->name }}</option>
         @else
-            @foreach(\App\Section::all() as $section)
+            @foreach(session('sections') as $section)
                 <option
                     value="{{ $section->id }}"
                     @if(session('section')->id === $section->id)

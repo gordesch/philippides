@@ -40,13 +40,13 @@ class Person extends Model
         return $this->morphMany(Message::class, 'recipientable');
     }
 
+    public function phone_check()
+    {
+        return $this->hasOne(PhoneCheck::class);
+    }
+
     public function section()
     {
         return $this->belongsTo(Section::class);
-    }
-
-    public function user()
-    {
-        return $this->hasOne(User::class);
     }
 }

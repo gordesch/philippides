@@ -3,50 +3,47 @@
 @section('breadcrumb')
 
 <ol class="breadcrumb">
-    <li><a href="{{ route('welcome') }}">Accueil</a></li>
-    <li><a href="{{ route('sending.index') }}">Envois</a></li>
-    <li class="active">{{ $sending->title }}</li>
+    <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Accueil</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('sending.index') }}">Envois</a></li>
+    <li class="breadcrumb-item active">{{ $sending->title }}</li>
 </ol>
 
 @endsection
 
 @section('content')
 
-<div class="panel panel-default">
-    <div class="panel-heading">Informations</div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-block">
+        <h4 class="card-title">
+            <i class="fa fa-fw fa-info-circle"></i>
+            Informations
+        </h4>
         <form method="POST" action="{{ route('sending.update', [$sending]) }}">
-            @include('partials.alerts.errors')
-            
             {{ method_field('PATCH') }}
-            {{ csrf_field() }}
-            
-            <div class="form-group">
-                <label for="title">Titre</label>
-                <input type="text" name="title" value="{{ old('title', $sending->title) }}" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="body">Corps du message</label>
-                <textarea 
-                    pattern="@£$¥èéùìòÇ\fØø\nÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\x22#¤%&'()*+,-./[0-9]:;<=>\?¡[A-Z]ÄÖÑÜ§¿[a-z]äöñüà\^\{\}\[~\]\|€"
-                    name="body"
-                    class="form-control"
-                >{{ old('body', $sending->body) }}</textarea>
-            </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-default">
-                    Modifier le message
-                </button>
-            </div>
+            @include('sending._form', [
+                'submitButtonIconClass' => '',
+                'submitButtonText' => 'Modifier l\'envoi',
+            ])
+
         </form>
     </div>
 </div>
+
 <form method="POST" action="{{ route('sending.send', [$sending]) }}" style="display:inline;">
-    <div class="panel panel-default">
-        <div class="panel-heading">Envoi et destinataires</div>
+    {{ method_field('POST') }}
+    {{ csrf_field() }}
+
+    <div class="card">
+        <div class="card-block">
+            <h4 class="card-title">
+                <i class="fa fa-fw fa-address-book"></i>
+                Destinataires
+            </h4>
+        </div>
+
         @if($sending->sent)
-            <ul class="list-group">
+            <ul class="list-group list-group-flush">
                 @foreach ($messages as $message)
                     <li class="list-group-item">
                         {{ $message->recipientable->first_name }}
@@ -63,17 +60,15 @@
                 @endforeach
             </ul>
         @else
-            <ul class="list-group">
-                {{ method_field('POST') }}
-                {{ csrf_field() }}
-
+            <ul class="list-group list-group-flush">
                 @foreach ($broadcast_lists as $broadcast_list)
                     <li class="list-group-item">
-                        <div class="checkbox">
-                            <label>
+                        <div class="form-check">
+                            <label class="form-check-label">
                                 <input
                                         type="checkbox"
-                                        name="broadcast_lists_ids[]"
+                                        class="form-check-input"
+                                        name="broadcast_list_ids[]"
                                         value="{{ $broadcast_list->id }}"
                                 >
                                 <i class="fa fa-list-ul"></i>
@@ -84,37 +79,44 @@
                 @endforeach
                 @foreach ($people as $person)
                     <li class="list-group-item">
-                        <div class="checkbox">
-                            <label>
+                        <div class="form-check">
+                            <label class="form-check-label">
                                 <input
                                         type="checkbox"
-                                        name="people_ids[]"
+                                        class="form-check-input"
+                                        name="person_ids[]"
                                         value="{{ $person->id }}"
                                 >
-                                <i class="fa fa-user"></i>
+                                <i class="fa fa-address-card"></i>
                                 {{ $person->last_name }} {{ $person->first_name }}
                             </label>
                         </div>
 
                     </li>
                 @endforeach
-                <li class="list-group-item">
-                    <button type="submit" class="btn btn-primary">
-                        Envoyer
-                    </button>
-                </li>
             </ul>
         @endif
     </div>
-</form>
 
-<form method="POST" action="{{ route('sending.destroy', [$sending]) }}" style="display:inline;">
-    {{ method_field('DELETE') }}
-    {{ csrf_field() }}
-    <button type="submit" class="btn btn-block btn-danger">
-        Supprimer le message
+    <button type="submit" class="btn btn-lg btn-block btn-primary card-like">
+        Envoyer <em>via</em> <i class="fa fa-w fa-bullhorn"></i> Philippidès
     </button>
+    <!--
+    <a class="btn btn-lg btn-block btn-primary card-like" href="sms://open?addresses={+33645645084},{+33645645084}&body=iOS Message">
+        Envoyer <em>via</em> <i class="fa fa-fw fa-apple"></i> SMS
+    </a>
+
+    <a class="btn btn-lg btn-block btn-primary card-like" href="sms://+33645645084,+33684949338?body=Android Message">
+        Envoyer <em>via</em> <i class="fa fa-fw fa-android"></i> SMS
+    </a>
+    !-->
 </form>
 
-    
+@include('partials.modals.delete', [
+    'model' => 'sending',
+    'modelName' => 'envoi',
+    'theModelDeleteText' => 'l\'',
+    'thisModelDeleteText' => 'cet',
+])
+
 @endsection

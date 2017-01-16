@@ -8,12 +8,7 @@ class Section extends Model
 {
     public function broadcast_lists()
     {
-        return $this->belongsToMany(BroadcastList::class);
-    }
-
-    public function messages_received()
-    {
-        return $this->morphMany(Message::class, 'recipientable');
+        return $this->hasMany(BroadcastList::class);
     }
 
     public function people()
@@ -21,8 +16,13 @@ class Section extends Model
         return $this->hasMany(Person::class);
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     public function virtual_number()
     {
-        return $this->morphToMany(VirtualNumber::class, 'virtual_numberables');
+        return $this->belongsTo(VirtualNumber::class);
     }
 }

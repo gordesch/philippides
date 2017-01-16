@@ -34,15 +34,6 @@ class CreatePeopleTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        // Initial config
-        DB::table('people')->insert(
-            array(
-                'last_name' => 'ADMIN',
-                'first_name' => 'Admin',
-                'section_id' => 1,
-            )
-        );
     }
 
     /**

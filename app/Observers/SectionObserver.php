@@ -15,9 +15,10 @@ class SectionObserver
      */
     public function saved(Section $section)
     {
+        session(['section' => Section::find(session('section')->id)->load('virtual_number')]);
+
         if (session('user')->scope !== 'section') {
             session(['sections' => Section::all()]);
-            session(['section' => Section::find(session('section')->id)]);
         }
     }
 }

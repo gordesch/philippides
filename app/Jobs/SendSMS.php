@@ -39,9 +39,9 @@ class SendSMS implements ShouldQueue
     {
         $start_at = microtime();
         $response = Nexmo::message()->send([
-            'to' => $this->message->recipientable()->mobile_phone,
-            'from' => $this->message->senderable()->virtual_number()->number,
-            'text' => $this->broadcast_message->body
+            'to' => $this->message->recipientable->mobile_phone,
+            'from' => $this->message->senderable->section->virtual_number->number,
+            'text' => $this->sending->body,
         ]);
         $this->message->provider_internal_id = $response->getMessageId();
         $this->message->cost = $response->getPrice();

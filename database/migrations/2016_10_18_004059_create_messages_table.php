@@ -24,7 +24,7 @@ class CreateMessagesTable extends Migration
             $table->string('provider_internal_id')->nullable()->index();
             $table->uuid('provider_philippides_uuid')->nullable()->index();
             $table->string('type')->nullable(); // outgoing, incoming
-            $table->float('cost', 2, 2)->nullable();
+            $table->float('cost', 5, 3)->nullable();
             $table->string('status')->default('pending'); // pending, sent, error, received
             $table->integer('section_id')->unsigned()->nullable()->index();
             $table->boolean('global')->default(false);

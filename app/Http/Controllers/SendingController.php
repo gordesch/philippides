@@ -21,7 +21,9 @@ class SendingController extends Controller
 
     public function create()
     {
-        return view('sending.create');
+        return view('sending.create', [
+            'sending' => new Sending
+        ]);
     }
 
     public function store(Request $request)
@@ -81,7 +83,7 @@ class SendingController extends Controller
     public function send(Request $request, Sending $sending)
     {
         $sender = session('user');
-        $sender_number = session('section')->virtual_number()->number;
+        $sender_number = session('section')->virtual_number->number;
         $recipients = $this->find_individual_recipients($request);
         foreach ($recipients as $recipient) {
             $message = new Message;

@@ -12,12 +12,7 @@
 */
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', array(
-        'as' => 'welcome',
-        function () {
-            return view('welcome');
-        }
-    ));
+    Route::get('/', 'HomeController@welcome')->name('welcome');
 
     Route::resource('person', 'PersonController', ['except' => ['edit']]);
     Route::post('person/{person}/check_mobile_phone',
@@ -33,6 +28,20 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('sending', 'SendingController', ['except' => ['edit']]);
     Route::post('sending/{sending}/send', 'SendingController@send')->name('sending.send');
+
+    Route::group(['prefix' => 'admin'], function () {
+        Route::get('/', 'HomeController@dashboard')->name('dashboard');
+
+        Route::resource('section', 'SectionController', ['except' => ['edit']]);
+        Route::post('section/{section}/virtual_number',
+            'SectionController@add_virtual_number')->name('section.add_virtual_number');
+        Route::delete('section/{section}/virtual_number',
+            'SectionController@delete_virtual_number')->name('section.delete_virtual_number');
+
+        Route::resource('user', 'UserController', ['except' => ['edit']]);
+
+        Route::resource('virtual_number', 'VirtualNumberController', ['except' => ['edit']]);
+    });
 });
 
 // Webhooks

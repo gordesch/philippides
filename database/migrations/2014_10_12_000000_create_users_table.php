@@ -18,8 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('person_id')->unsigned()->nullable()->index();
-            $table->integer('role_id')->unsigned()->nullable()->index();
+            $table->integer('section_id')->unsigned()->index();
+            $table->integer('role_id')->unsigned()->index();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -30,7 +30,7 @@ class CreateUsersTable extends Migration
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
                 'password' => bcrypt('admin'),
-                'person_id' => 1,
+                'section_id' => 1,
                 'role_id' => 1,
             )
         );

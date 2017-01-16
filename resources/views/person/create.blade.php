@@ -3,29 +3,23 @@
 @section('breadcrumb')
 
 <ol class="breadcrumb">
-    <li><a href="{{ route('welcome') }}">Accueil</a></li>
-    <li><a href="{{ route('person.index') }}">Contacts</a></li>
-    <li class="active">Nouveau contact</li>
+    <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Accueil</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('person.index') }}">Contacts</a></li>
+    <li class="breadcrumb-item active">Nouveau contact</li>
 </ol>
 
 @endsection
 
 @section('content')
 
-<h1>Nouveau contact</h1>
+<div class="card">
+    <form class="card-block" method="POST" action="{{ route('person.store') }}">
 
-@include('partials.alerts.errors')
+        <h4 class="card-title">Nouveau contact</h4>
 
-<form method="POST" action="{{ route('person.store') }}">
-    {{ csrf_field() }}
-    
-    @include('person.create-form')
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            Créer le contact
-        </button>
-    </div>
-</form>
+        @include('person._form')
+
+    </form>
+</div>
 
 @endsection

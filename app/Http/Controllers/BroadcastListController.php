@@ -17,7 +17,9 @@ class BroadcastListController extends Controller
 
     public function create()
     {
-        return view('broadcast_list.create');
+        return view('broadcast_list.create', [
+            'broadcast_list' => new BroadcastList
+        ]);
     }
 
     public function store(Request $request)
@@ -34,7 +36,7 @@ class BroadcastListController extends Controller
         session()->flash('flash_message', 'Liste créée');
         session()->flash('flash_message_type', 'success');
 
-        return redirect()->route('broadcast_list.index');
+        return redirect()->route('broadcast_list.show',[$broadcast_list]);
     }
 
     public function show(BroadcastList $broadcast_list)
@@ -58,7 +60,7 @@ class BroadcastListController extends Controller
     {
         $broadcast_list->delete();
 
-        session()->flash('flash_message', 'Liste "' . $broadcast_list->name . '" supprimée');
+        session()->flash('flash_message', 'Liste supprimée');
         session()->flash('flash_message_type', 'success');
 
         return redirect()->route('broadcast_list.index');

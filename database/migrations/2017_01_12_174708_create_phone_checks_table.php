@@ -15,6 +15,9 @@ class CreatePhoneChecksTable extends Migration
     {
         Schema::create('phone_checks', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('phone_number');
+            $table->string('status')->default('unknown');
+            $table->integer('person_id')->unsigned()->index();
             $table->timestamps();
         });
     }

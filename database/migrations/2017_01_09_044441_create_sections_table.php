@@ -16,6 +16,7 @@ class CreateSectionsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->boolean('global')->default(false);
+            $table->integer('virtual_number_id')->unsigned()->nullable()->index();
             $table->timestamps();
         });
 

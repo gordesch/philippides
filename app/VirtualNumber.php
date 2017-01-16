@@ -10,11 +10,6 @@ class VirtualNumber extends Model
 
     public function sections()
     {
-        return $this->morphedByMany(User::class, 'virtual_numberables');
-    }
-
-    public function user()
-    {
-        return $this->morphedByMany(User::class, 'virtual_numberables');
+        return $this->hasMany(Section::class);
     }
 }

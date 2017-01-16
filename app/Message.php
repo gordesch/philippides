@@ -24,11 +24,6 @@ class Message extends Model
         return $this->morphTo();
     }
 
-    public function section()
-    {
-        return $this->belongsTo(Section::class);
-    }
-
     public function sending()
     {
         return $this->belongsTo(sending::class);

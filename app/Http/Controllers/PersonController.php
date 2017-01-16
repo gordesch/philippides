@@ -20,7 +20,9 @@ class PersonController extends Controller
 
     public function create()
     {
-        return view('person.create');
+        return view('person.create', [
+            'person' => new Person
+        ]);
     }
 
     public function store(PersonRequest $request)

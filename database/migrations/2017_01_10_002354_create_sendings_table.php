@@ -18,7 +18,7 @@ class CreateSendingsTable extends Migration
             $table->string('title')->nullable();
             $table->text('body');
             $table->string('sent')->default(false);
-            $table->string('type'); // outgoing, incoming
+            $table->string('type')->default('outgoing'); // outgoing, incoming
             $table->integer('section_id')->unsigned()->nullable()->index();
             $table->boolean('global')->default(false);
             $table->timestamps();
