@@ -40,8 +40,7 @@ class MessageReceived extends Notification implements ShouldQueue
     public function toTelegram($notifiable)
     {
         return TelegramMessage::create()
-                    ->content('*Nouveau message entrant !*')
-                    ->button('Voir le message', route('person.show', [$this->message->contact_id]));
+                    ->button('Nouveaux message entrant !', route('person.show', [$this->message->contact_id]));
     }
 
     /**
