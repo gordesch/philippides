@@ -53,6 +53,7 @@ class ProcessReceivedMessage implements ShouldQueue
         $sending->save();
 
         $message = new Message;
+        $message->type = 'incoming';
         $message->status = 'incoming';
         $message->contact_id = $sender->id;
         $sender->messages_sent()->save($message);
