@@ -111,7 +111,7 @@
                     <h6 class="mb-1">
                         De <code>
                         @if($message->type === 'incoming')
-                            <i class="fa fa-fw fa-user" aria-hidden="true"></i>
+                            <i class="fa fa-fw fa-address-card" aria-hidden="true"></i>
                             {{ $message->senderable->first_name }}
                             {{ $message->senderable->last_name }}
                         @elseif($message->type === 'outgoing')
