@@ -9,7 +9,7 @@ class NexmoWebhookController extends Controller
 {
     public function receive(){
         $incoming = SMS::receive();
-        dispatch((new ProcessReceivedMessage($incoming)))
+        dispatch((new ProcessReceivedMessage($incoming)));
     }
 
     public function delivery_receipt(){
