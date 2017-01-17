@@ -109,9 +109,9 @@ return [
         'cluster' => false,
 
         'default' => [
-            'host' => env('REDIS_HOST', 'localhost'),
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => env('REDIS_PORT', 6379),
+            'host' => env('REDIS_HOST', parse_url(getenv("REDIS_URL"))["host"]),
+            'password' => env('REDIS_PASSWORD', parse_url(getenv("REDIS_URL"))["pass"]),
+            'port' => env('REDIS_PORT', parse_url(getenv("REDIS_URL"))["port"]),
             'database' => 0,
         ],
 
