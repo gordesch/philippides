@@ -182,7 +182,6 @@ return [
          */
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
         SimpleSoftwareIO\SMS\SMSServiceProvider::class,
         Nexmo\Laravel\NexmoServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
