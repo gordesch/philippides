@@ -26,6 +26,6 @@ class Message extends Model
 
     public function sending()
     {
-        return $this->belongsTo(sending::class);
+        return $this->belongsTo(Sending::class);
     }
 }
