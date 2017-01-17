@@ -63,6 +63,6 @@ class ProcessReceivedMessage implements ShouldQueue
         $message->save();
 
         $users = User::withoutGlobalScopes()->where('section_id', $recipient->id)->whereNotNull('telegram_user_id')->get()->first();
-        Notification::send($users, new MessageReceived($message))
+        Notification::send($users, new MessageReceived($message));
     }
 }
