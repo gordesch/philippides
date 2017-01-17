@@ -114,7 +114,7 @@
                             <i class="fa fa-fw fa-user" aria-hidden="true"></i>
                             {{ $message->senderable->first_name }}
                             {{ $message->senderable->last_name }}
-                        @else($message->type === 'outgoing')
+                        @elseif($message->type === 'outgoing')
                             <i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i>
                             {{ $message->senderable->name }}
                         @endif
