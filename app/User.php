@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password',];
+    protected $fillable = ['name', 'email', 'password', 'telegram_user_id',];
     protected $hidden = ['password', 'remember_token',];
 
     public function messages_sent()
@@ -26,5 +26,10 @@ class User extends Authenticatable
     public function section()
     {
         return $this->belongsTo(Section::class);
+    }
+
+    public function routeNotificationForTelegram()
+    {
+        return $this->telegram_user_id;
     }
 }

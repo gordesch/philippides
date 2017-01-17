@@ -11,6 +11,11 @@ class Section extends Model
         return $this->hasMany(BroadcastList::class);
     }
 
+    public function messages_received()
+    {
+        return $this->morphMany(Message::class, 'recipientable');
+    }
+
     public function people()
     {
         return $this->hasMany(Person::class);

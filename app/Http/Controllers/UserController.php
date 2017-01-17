@@ -35,7 +35,7 @@ class UserController extends Controller
         session()->flash('flash_message', 'Utilisateur·rice créé·e');
         session()->flash('flash_message_type', 'success');
 
-        return redirect()->route('admin.user.show', [$user]);
+        return redirect()->route('user.show', [$user]);
     }
 
     public function show(User $user)
@@ -46,12 +46,11 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $user->update($request->all());
-        $user->save();
 
         session()->flash('flash_message', 'Utilisateur·rice modifié·e');
         session()->flash('flash_message_type', 'success');
 
-        return redirect()->route('admin.user.show', [$user]);
+        return redirect()->route('user.show', [$user]);
     }
 
     public function destroy(User $user)
@@ -61,6 +60,6 @@ class UserController extends Controller
         session()->flash('flash_message', 'Utilisateur·rice supprimé·e');
         session()->flash('flash_message_type', 'success');
 
-        return redirect()->route('section.index');
+        return redirect()->route('user.index');
     }
 }

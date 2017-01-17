@@ -8,10 +8,13 @@
 </div>
 
 <div class="form-group">
+    <label for="name">Telegram User ID </label>
+    <input type="number" name="telegram_user_id" value="{{ old('telegram_user_id', $user->telegram_user_id) }}" class="form-control">
+</div>
+
+<div class="form-group">
     <button type="submit" class="btn btn-lg btn-block btn-primary">
-        @if($submitButtonIconClass)
-            <i class="fa fa-fw fa-{{ $submitButtonIconClass ?? 'plus-circle' }}" aria-hidden="true"></i>
-        @endif
+        {!! $submitButtonIcon ?? '<i class="fa fa-fw fa-plus-circle" aria-hidden="true"></i>' !!}
         {{ $submitButtonText ?? 'Créer l\'utilisateur·rice' }}
     </button>
 </div>

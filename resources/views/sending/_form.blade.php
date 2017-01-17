@@ -17,9 +17,7 @@
 
 <div class="form-group">
     <button type="submit" class="btn btn-lg btn-block btn-primary">
-        @if($submitButtonIconClass)
-            <i class="fa fa-fw fa-{{ $submitButtonIconClass ?? 'plus-circle' }}" aria-hidden="true"></i>
-        @endif
+        {!! $submitButtonIcon ?? '<i class="fa fa-fw fa-plus-circle" aria-hidden="true"></i>' !!}
         {{ $submitButtonText ?? 'Créer l\'envoi' }}
     </button>
 </div>

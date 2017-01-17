@@ -186,6 +186,7 @@ return [
         SimpleSoftwareIO\SMS\SMSServiceProvider::class,
         Nexmo\Laravel\NexmoServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
+        NotificationChannels\Telegram\TelegramServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -16,7 +16,7 @@ class PersonObserver
     public function saved(Person $person)
     {
         if($person->mobile_phone_status === 'checking'){
-            dispatch((new CheckMobilePhone($person))->onQueue('checks'));
+            dispatch((new CheckMobilePhone($person)));
         }
     }
 }

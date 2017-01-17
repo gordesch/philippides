@@ -41,11 +41,9 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $user)
     {
-        if (!session('user')) {
-            $user->load('section.virtual_number', 'role');
-            session(['user' => $user]);
-            session(['section' => $user->section]);
-            session(['sections' => Section::all()]);
-        }
+        $user->load('section.virtual_number', 'role');
+        session(['user' => $user]);
+        session(['section' => $user->section]);
+        session(['sections' => Section::all()]);
     }
 }

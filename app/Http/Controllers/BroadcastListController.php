@@ -42,8 +42,11 @@ class BroadcastListController extends Controller
     public function show(BroadcastList $broadcast_list)
     {
         $broadcast_list->load('list_subscribers', 'sendings');
+        $available_list_subscribers = Person::whereDoesntHave('broadcast_lists', function ($query) use ($broadcast_list)  {
+            $query->where('broadcast_list_id', '=', $broadcast_list->id);
+        })->get();
 
-        return view('broadcast_list.show', compact('broadcast_list'));
+        return view('broadcast_list.show', compact('broadcast_list', 'available_list_subscribers'));
     }
 
     public function update(Request $request, BroadcastList $broadcast_list)
@@ -73,9 +76,9 @@ class BroadcastListController extends Controller
         return view('broadcast_list.subscription', compact('broadcast_list', 'people'));
     }
 
-    public function subscribe(Person $person, BroadcastList $broadcast_list)
+    public function subscribe(Request $request, BroadcastList $broadcast_list)
     {
-        $person->broadcast_lists()->attach($broadcast_list->id);
+        $broadcast_list->list_subscribers()->attach($request->person_id);
 
         session()->flash('flash_message', 'Contact ajouté à la liste');
         session()->flash('flash_message_type', 'success');
@@ -85,7 +88,7 @@ class BroadcastListController extends Controller
 
     public function unsubscribe(Person $person, BroadcastList $broadcast_list)
     {
-        $person->broadcast_lists()->detach($broadcast_list->id);
+        $broadcast_list->list_subscribers()->detach($person->id);
 
         session()->flash('flash_message', 'Contact retiré de la liste');
         session()->flash('flash_message_type', 'success');

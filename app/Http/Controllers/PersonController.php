@@ -55,7 +55,7 @@ class PersonController extends Controller
         $person->load('broadcast_lists', 'messages.sending');
         $available_broadcast_lists = BroadcastList::whereDoesntHave('list_subscribers', function ($query) use ($person)  {
             $query->where('person_id', '=', $person->id);
-        })->get();  
+        })->get();
         return view('person.show', compact('person', 'available_broadcast_lists'));
     }
 

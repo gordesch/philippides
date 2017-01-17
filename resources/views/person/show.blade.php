@@ -43,8 +43,6 @@
         <li class="list-group-item">
             <form method="POST" action="{{ route('person.subscribe', [$person]) }}" class="form-inline">
                 {{ csrf_field() }}
-                <input type="hidden" name="creation_origin" value="person">
-                <input type="hidden" name="person_id" value="{{ $person->id }}">
                 <div class="form-group">
                     @if($available_broadcast_lists->isEmpty())
                         <select class="form-control" disabled>

@@ -7,9 +7,7 @@ use App\Person;
 use App\Message;
 use App\Sending;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Jobs\SendSMS;
-use Illuminate\Support\Facades\Auth;
 
 class SendingController extends Controller
 {
@@ -93,8 +91,7 @@ class SendingController extends Controller
             $message->section_id = session('section')->id;
             $sender->messages_sent()->save($message);
             $recipient->messages_received()->save($message);
-            dispatch((new SendSMS($sending, $message))
-                ->onQueue('2-way-sms-' . $sender_number));
+            dispatch((new SendSMS($sending, $message)));
         }
         $sending->sent = true;
         $sending->save();
