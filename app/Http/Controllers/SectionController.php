@@ -42,7 +42,7 @@ class SectionController extends Controller
     public function show(Section $section)
     {
         $section->load('virtual_number', 'users');
-        $users = User::where('section_id', $section->id)->orderBy('type', 'asc')->orderBy('name', 'asc')->get();
+        $users = User::where('section_id', $section->id)->orderBy('name', 'asc')->get();
         $virtual_numbers = VirtualNumber::all();
         return view('admin.section.show', compact('section', 'users', 'virtual_numbers'));
     }
