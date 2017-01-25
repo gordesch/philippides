@@ -36,16 +36,15 @@ class CheckMobilePhone implements ShouldQueue
     public function handle()
     {
         $api = 'https://api.nexmo.com/ni/advanced/json?' . http_build_query([
-            'api_key'    => env('NEXMO_KEY'),
-            'api_secret' => env('NEXMO_SECRET'),
-            'number'     => $this->person->mobile_phone,
-            'country'    => 'FR'
-        ]);
+                'api_key' => env('NEXMO_KEY'),
+                'api_secret' => env('NEXMO_SECRET'),
+                'number' => $this->person->mobile_phone,
+                'country' => 'FR'
+            ]);
         $ch = curl_init($api);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($ch), true);
-        if ($response['status'] == 0)
-        {
+        if ($response['status'] == 0) {
             $this->person->mobile_phone = $response['international_format_number'];
             $this->person->mobile_phone_status = $response['valid_number'];
         } else {

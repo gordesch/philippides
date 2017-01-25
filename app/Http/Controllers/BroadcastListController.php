@@ -36,15 +36,16 @@ class BroadcastListController extends Controller
         session()->flash('flash_message', 'Liste créée');
         session()->flash('flash_message_type', 'success');
 
-        return redirect()->route('broadcast_list.show',[$broadcast_list]);
+        return redirect()->route('broadcast_list.show', [$broadcast_list]);
     }
 
     public function show(BroadcastList $broadcast_list)
     {
         $broadcast_list->load('list_subscribers', 'sendings');
-        $available_list_subscribers = Person::whereDoesntHave('broadcast_lists', function ($query) use ($broadcast_list)  {
-            $query->where('broadcast_list_id', '=', $broadcast_list->id);
-        })->get();
+        $available_list_subscribers = Person::whereDoesntHave('broadcast_lists',
+            function ($query) use ($broadcast_list) {
+                $query->where('broadcast_list_id', '=', $broadcast_list->id);
+            })->get();
 
         return view('broadcast_list.show', compact('broadcast_list', 'available_list_subscribers'));
     }

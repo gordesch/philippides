@@ -53,9 +53,10 @@ class PersonController extends Controller
     public function show(Person $person)
     {
         $person->load('broadcast_lists', 'messages.sending');
-        $available_broadcast_lists = BroadcastList::whereDoesntHave('list_subscribers', function ($query) use ($person)  {
-            $query->where('person_id', '=', $person->id);
-        })->get();
+        $available_broadcast_lists = BroadcastList::whereDoesntHave('list_subscribers',
+            function ($query) use ($person) {
+                $query->where('person_id', '=', $person->id);
+            })->get();
         return view('person.show', compact('person', 'available_broadcast_lists'));
     }
 
@@ -65,7 +66,7 @@ class PersonController extends Controller
 
         $person->update($request->all());
 
-        if($mobile_phone_changed){
+        if ($mobile_phone_changed) {
             $person->mobile_phone_status = 'checking';
             $person->save();
         }

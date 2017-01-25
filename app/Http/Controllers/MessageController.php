@@ -10,8 +10,12 @@ use App\Http\Requests;
 
 class MessageController extends Controller
 {
-    public function store(Request $request, BroadcastList $broadcast_list, BroadcastMessage $broadcast_message, Message $message)
-    {
+    public function store(
+        Request $request,
+        BroadcastList $broadcast_list,
+        BroadcastMessage $broadcast_message,
+        Message $message
+    ) {
         $this->validate($request, [
             'person_id' => 'required|numeric',
             'broadcast_message_id' => 'required|numeric',
@@ -27,9 +31,8 @@ class MessageController extends Controller
         session()->flash('flash_message', 'Abonné ajouté à la liste');
         session()->flash('flash_message_type', 'success');
 
-        if($request->creation_origin === 'person')
-        {
-            return redirect()->route('person.show', [$person] );
+        if ($request->creation_origin === 'person') {
+            return redirect()->route('person.show', [$person]);
         }
 
         return redirect()->route('broadcast_list.show', [$broadcast_list]);
@@ -42,11 +45,10 @@ class MessageController extends Controller
         session()->flash('flash_message', 'Abonné à la liste désinscrit');
         session()->flash('flash_message_type', 'success');
 
-        if($request->deletion_origin === 'person')
-        {
-            return redirect()->route('person.show', [$person] );
+        if ($request->deletion_origin === 'person') {
+            return redirect()->route('person.show', [$person]);
         }
-        
+
         return redirect()->route('broadcast_list.show', [$broadcast_list]);
     }
 }

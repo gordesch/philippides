@@ -29,7 +29,7 @@ class MessageReceived extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -40,13 +40,13 @@ class MessageReceived extends Notification implements ShouldQueue
     public function toTelegram($notifiable)
     {
         return TelegramMessage::create()
-                    ->content('*Nouveaux message entrant !* ' . route('person.show', [$this->message->contact_id]));
+            ->content('*Nouveaux message entrant !* ' . route('person.show', [$this->message->contact_id]));
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)

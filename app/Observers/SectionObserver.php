@@ -9,7 +9,7 @@ class SectionObserver
     /**
      * Listen to the Person saved event.
      *
-     * @param  Section  $person
+     * @param  Section $person
      *
      * @return void
      */

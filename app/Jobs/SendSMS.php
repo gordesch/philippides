@@ -45,7 +45,7 @@ class SendSMS implements ShouldQueue
         ]);
         $this->message->provider_internal_id = $response->getMessageId();
         $this->message->cost = $response->getPrice();
-        if($response->getStatus() == 0){
+        if ($response->getStatus() == 0) {
             $this->message->status = 'sent';
         } else {
             $this->message->status = 'error';
@@ -53,7 +53,7 @@ class SendSMS implements ShouldQueue
         $this->message->save();
         $end_at = microtime();
         $elapsed_time = $end_at - $start_at;
-        if ($elapsed_time < 2){
+        if ($elapsed_time < 2) {
             sleep(2 - $elapsed_time); // Nexmo Virtual Number SMS API Throttle Rate: 1 per 2 seconds
         }
     }

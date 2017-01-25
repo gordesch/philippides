@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
 use App\Section;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
     }
 
-    public function authenticated(Request $request, $user)
+    public function authenticated(Request $request, User $user)
     {
         $user->load('section.virtual_number', 'role');
         session(['user' => $user]);

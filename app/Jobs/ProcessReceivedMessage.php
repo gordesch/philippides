@@ -38,9 +38,9 @@ class ProcessReceivedMessage implements ShouldQueue
     public function handle()
     {
         $sender = Person::where('mobile_phone', $this->incoming->from())->get()->first();
-        if(!$sender){
+        if (!$sender) {
             $body = '** Message automatique ** Vous ne pouvez pas envoyer de message à ce numéro.';
-            SMS::send($body, null, function($sms) {
+            SMS::send($body, null, function ($sms) {
                 $sms->to($this->incoming->from());
             });
         }
@@ -63,7 +63,8 @@ class ProcessReceivedMessage implements ShouldQueue
         $message->section_id = $sender->section_id;
         $message->save();
 
-        $users = User::withoutGlobalScopes()->where('section_id', $recipient->id)->whereNotNull('telegram_user_id')->get()->first();
+        $users = User::withoutGlobalScopes()->where('section_id',
+            $recipient->id)->whereNotNull('telegram_user_id')->get()->first();
         Notification::send($users, new MessageReceived($message));
     }
 }

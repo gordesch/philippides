@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model
 {
+    protected $fillable = ['name', 'global',];
+
     public function broadcast_lists()
     {
         return $this->hasMany(BroadcastList::class);

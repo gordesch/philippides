@@ -7,12 +7,14 @@ use SMS;
 
 class NexmoWebhookController extends Controller
 {
-    public function receive(){
+    public function receive()
+    {
         $incoming = SMS::receive();
         dispatch((new ProcessReceivedMessage($incoming)));
     }
 
-    public function delivery_receipt(){
+    public function delivery_receipt()
+    {
         $incoming = SMS::receive();
         /*//Get the sender's number.
         $incoming->from();

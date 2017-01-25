@@ -11,7 +11,20 @@ class Person extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at', 'mobile_phone_checked_at'];
-    protected $fillable = ['first_name', 'last_name', 'address', 'zipcode', 'city', 'mobile_phone', 'landline', 'university', 'major', 'email', 'messageable', 'comments'];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'address',
+        'zipcode',
+        'city',
+        'mobile_phone',
+        'landline',
+        'university',
+        'major',
+        'email',
+        'messageable',
+        'comments'
+    ];
 
     protected static function boot()
     {

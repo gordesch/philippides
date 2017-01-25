@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Section::class);
+    }
+
     public function index()
     {
         $sections = Section::all()->load('users');

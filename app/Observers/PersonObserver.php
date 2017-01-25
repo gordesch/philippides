@@ -10,12 +10,12 @@ class PersonObserver
     /**
      * Listen to the Person saved event.
      *
-     * @param  Person  $person
+     * @param  Person $person
      * @return void
      */
     public function saved(Person $person)
     {
-        if($person->mobile_phone_status === 'checking'){
+        if ($person->mobile_phone_status === 'checking') {
             dispatch((new CheckMobilePhone($person)));
         }
     }

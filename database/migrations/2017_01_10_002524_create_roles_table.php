@@ -45,16 +45,16 @@ class CreateRolesTable extends Migration
         );
         DB::table('roles')->insert(
             array(
-                'name' => 'Global Manager',
+                'name' => 'Global User',
                 'scope' => 'global',
-                'type' => 'manager',
+                'type' => 'user',
             )
         );
         DB::table('roles')->insert(
             array(
-                'name' => 'Section User',
+                'name' => 'Section Admin',
                 'scope' => 'section',
-                'type' => 'user',
+                'type' => 'admin',
             )
         );
         DB::table('roles')->insert(
